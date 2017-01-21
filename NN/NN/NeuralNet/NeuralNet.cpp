@@ -24,7 +24,7 @@ namespace {
 }
 
 NeuralNet::NeuralNet() :
-o_learningRate(0.01f),
+o_learningRate(0.001f),
 p_sizeInput(0),
 p_sizeOutput(0){
     
@@ -98,7 +98,12 @@ bool NeuralNet::Evualuate(const std::vector<float> &input){
                 p_neuronList[indexNeuron].currentVal += p_neuronList[indexNeuron].coeffs[nVal] * p_neuronList[lastOffset + nVal].output;
             }
             
-            ApplyActivationFunctionAtNeuron(indexNeuron);
+            if(layer < p_nLayers -1){
+                ApplyActivationFunctionAtNeuron(indexNeuron);
+            }
+            else{
+                p_neuronList[indexNeuron].output = p_neuronList[indexNeuron].currentVal;
+            }
         }
         currentLayerOffset += currentLayerSize;
         lastOffset+= currentCoeffSize;
@@ -207,7 +212,11 @@ void NeuralNet::BackPropagation(const float* input, int expectedOutput){
         for(int i_neuron = 0; i_neuron < currentLayerSize; i_neuron++){
             
             const int indexNeuron = i_neuron + currentLayerOffset;
-            ApplyActivationDiffAtNeuron(indexNeuron);
+            if(layer == p_nLayers - 1)
+                ApplyActivationDiffAtNeuron(indexNeuron);
+            else{
+                p_trainingNeurons[indexNeuron].df_val = 1;
+            }
             
             //if dE/dsout hasn't been initialized yet (ie, if we are not considering the output layer)
             if(layer < p_nLayers - 1){
@@ -307,40 +316,21 @@ void NeuralNet::InitCoeffWithRandomValue(){
 // Here we use a softmax layer on the output merged with a cross entropy function to build the error cost function
 float NeuralNet::GetEnergy(const int expectedLabel){
     
-    /*float output = 0;
-    for(int i = 0; i < p_sizeOutput; i++){
-        if(expectedLabel == i){
-            output += (1 - p_neuronList[p_offsetOutput + expectedLabel].output) * (1 - p_neuronList[p_offsetOutput + expectedLabel].output);
-        }
-        else{
-            output += (p_neuronList[p_offsetOutput + expectedLabel].output) * p_neuronList[p_offsetOutput + expectedLabel].output;
-        }
-    }
-    
-    return output;*/
     float softMaxNormalizer = GetSoftMaxNormalier();
-    return - log(expf(p_neuronList[expectedLabel + p_offsetOutput].output) * softMaxNormalizer);
+    return - log(expf(p_neuronList[expectedLabel + p_offsetOutput].currentVal) * softMaxNormalizer);
     
 }
 
 void NeuralNet::GetDerivateEnergy(const int expectedLabel){
     
-    /* for(int i_neuron = 0; i_neuron < p_sizeOutput; i_neuron++){
-        if(i_neuron == expectedLabel){
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val =- 2 * (1 - p_neuronList[p_offsetOutput + expectedLabel].output);
-        }
-        else{
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = 2* p_neuronList[p_offsetOutput + expectedLabel].output;
-
-        }*/
     float softMaxNormalizer = GetSoftMaxNormalier();
     
     for(int i_neuron = 0; i_neuron < p_sizeOutput; i_neuron++){
         if(i_neuron == expectedLabel){
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = - 1.f + expf(p_neuronList[expectedLabel + p_offsetOutput].output) * softMaxNormalizer;
+            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = - 1.f + expf(p_neuronList[expectedLabel + p_offsetOutput].currentVal) * softMaxNormalizer;
         }
         else{
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = expf(p_neuronList[i_neuron + p_offsetOutput].output) * softMaxNormalizer;
+            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = expf(p_neuronList[i_neuron + p_offsetOutput].currentVal) * softMaxNormalizer;
         }
     }
     
