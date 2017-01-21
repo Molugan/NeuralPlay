@@ -24,7 +24,7 @@ namespace {
 }
 
 NeuralNet::NeuralNet() :
-o_learningRate(0.001f),
+o_learningRate(0.01f),
 p_sizeInput(0),
 p_sizeOutput(0){
     
