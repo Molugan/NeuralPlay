@@ -24,7 +24,7 @@ namespace {
 }
 
 NeuralNet::NeuralNet() :
-o_learningRate(0.01f),
+o_learningRate(0.1f),
 p_sizeInput(0),
 p_sizeOutput(0){
     
@@ -175,7 +175,7 @@ float NeuralNet::GetSoftMaxNormalier() const {
         output += expf(p_neuronList[p_offsetOutput + i_neuron].output);
     }
     
-    return 1.f / output;
+    return output;
 }
 
 void NeuralNet::BackPropagation(const float* input, int expectedOutput){
@@ -307,43 +307,48 @@ void NeuralNet::InitCoeffWithRandomValue(){
 // Here we use a softmax layer on the output merged with a cross entropy function to build the error cost function
 float NeuralNet::GetEnergy(const int expectedLabel){
     
-    /*float output = 0;
-    for(int i = 0; i < p_sizeOutput; i++){
-        if(expectedLabel == i){
-            output += (1 - p_neuronList[p_offsetOutput + expectedLabel].output) * (1 - p_neuronList[p_offsetOutput + expectedLabel].output);
+    float softMaxNormalizer = GetSoftMaxNormalier();
+    float output = p_sizeOutput * log(softMaxNormalizer);
+    for(int i_neuron = 0; i_neuron < p_sizeOutput; i_neuron++){
+        if(i_neuron==expectedLabel){
+            output -= p_neuronList[expectedLabel + p_offsetOutput].output;
         }
         else{
-            output += (p_neuronList[p_offsetOutput + expectedLabel].output) * p_neuronList[p_offsetOutput + expectedLabel].output;
+            output -= log(softMaxNormalizer - expf(p_neuronList[i_neuron + p_offsetOutput].output));
         }
     }
-    
-    return output;*/
-    float softMaxNormalizer = GetSoftMaxNormalier();
-    return - log(expf(p_neuronList[expectedLabel + p_offsetOutput].output) * softMaxNormalizer);
+    return output;
     
 }
 
 void NeuralNet::GetDerivateEnergy(const int expectedLabel){
     
-    /* for(int i_neuron = 0; i_neuron < p_sizeOutput; i_neuron++){
-        if(i_neuron == expectedLabel){
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val =- 2 * (1 - p_neuronList[p_offsetOutput + expectedLabel].output);
-        }
-        else{
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = 2* p_neuronList[p_offsetOutput + expectedLabel].output;
-
-        }*/
     float softMaxNormalizer = GetSoftMaxNormalier();
     
     for(int i_neuron = 0; i_neuron < p_sizeOutput; i_neuron++){
         if(i_neuron == expectedLabel){
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = - 1.f + expf(p_neuronList[expectedLabel + p_offsetOutput].output) * softMaxNormalizer;
+            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = -1 + p_sizeOutput * expf(p_neuronList[expectedLabel + p_offsetOutput].output)/ softMaxNormalizer;
+            for(int j = 0; j < p_sizeOutput; j++){
+                if(j == expectedLabel)
+                    continue;
+                p_trainingNeurons[p_offsetOutput + i_neuron].dE_val -= expf(p_neuronList[expectedLabel + p_offsetOutput].output)/ (softMaxNormalizer - expf(p_neuronList[j + p_offsetOutput].output));
+            }
         }
         else{
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = expf(p_neuronList[i_neuron + p_offsetOutput].output) * softMaxNormalizer;
+            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = p_sizeOutput * expf(p_neuronList[i_neuron + p_offsetOutput].output) / softMaxNormalizer;
+            for(int j = 0; j < p_sizeOutput; j++){
+                if(j== expectedLabel)
+                    continue;
+                else if(j == i_neuron)
+                    continue;
+                else{
+                    p_trainingNeurons[i_neuron + p_offsetOutput].dE_val -= expf(p_neuronList[i_neuron + p_offsetOutput].output)/(softMaxNormalizer - expf(p_neuronList[i_neuron + p_offsetOutput].output));
+                                                                                                                                 
+                }
+            }
         }
     }
-    
+
 }
 bool NeuralNet::Train(const std::vector<std::vector<float> >& inputs, const std::vector<int>& labels){
     
@@ -361,7 +366,7 @@ bool NeuralNet::Train(const std::vector<std::vector<float> >& inputs, const std:
     InitTrainingNeurons();
     
     float current_error = std::numeric_limits<float>::max();
-    int n_iterations = 100000;
+    int n_iterations = 10000;
     float error_threshold = 0.5f;
     float accuracyRate = 0;
     
