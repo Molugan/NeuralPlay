@@ -317,7 +317,7 @@ void NeuralNet::InitCoeffWithRandomValue(){
 float NeuralNet::GetEnergy(const int expectedLabel){
     
     float softMaxNormalizer = GetSoftMaxNormalier();
-    return - log(expf(p_neuronList[expectedLabel + p_offsetOutput].currentVal) * softMaxNormalizer);
+    return - log(expf(p_neuronList[expectedLabel + p_offsetOutput].output) * softMaxNormalizer);
     
 }
 
@@ -330,7 +330,7 @@ void NeuralNet::GetDerivateEnergy(const int expectedLabel){
             p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = - 1.f + expf(p_neuronList[expectedLabel + p_offsetOutput].currentVal) * softMaxNormalizer;
         }
         else{
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = expf(p_neuronList[i_neuron + p_offsetOutput].currentVal) * softMaxNormalizer;
+            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val = expf(p_neuronList[i_neuron + p_offsetOutput].output) * softMaxNormalizer;
         }
     }
     
@@ -352,7 +352,7 @@ bool NeuralNet::Train(const std::vector<std::vector<float> >& inputs, const std:
     
     float current_error = std::numeric_limits<float>::max();
     int n_iterations = 100000;
-    float error_threshold = 0.5f;
+    float error_threshold = 0.3f;
     float accuracyRate = 0;
     
     for(int iteration = 0; iteration < n_iterations; iteration++){
