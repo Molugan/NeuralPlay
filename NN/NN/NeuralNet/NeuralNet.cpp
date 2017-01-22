@@ -352,7 +352,7 @@ bool NeuralNet::Train(const std::vector<std::vector<float> >& inputs, const std:
     
     float current_error = std::numeric_limits<float>::max();
     int n_iterations = 100000;
-    float error_threshold = 0.3f;
+    float error_threshold = 0.1f;
     float accuracyRate = 0;
     
     for(int iteration = 0; iteration < n_iterations; iteration++){

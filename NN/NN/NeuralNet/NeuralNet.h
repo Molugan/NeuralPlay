@@ -39,6 +39,7 @@ struct TrainingNeuron{
     
 };
 
+//Structure for a fully connected feed forward neural network
 class NeuralNet{
     
     int                 p_sizeInput;
