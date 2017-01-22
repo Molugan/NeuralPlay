@@ -9,6 +9,7 @@
 #include <iostream>
 #include "OthelloBoard.h"
 #include "HumanPlayer.h"
+#include "AIPlayer.h"
 
 #define AI_ERROR 1
 
@@ -36,7 +37,7 @@ int main(int argc, const char * argv[]) {
     testBoard.Reset();
     
     Player* whitePlayer = new HumanPlayer(kPlayerWhite, &testBoard);
-    Player* blackPlayer = new HumanPlayer(kPlayerBlack, &testBoard);
+    Player* blackPlayer = new AIPlayer(kPlayerBlack, &testBoard);
     
     Player* playerList[] = {whitePlayer, blackPlayer};
     

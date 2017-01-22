@@ -77,17 +77,24 @@ void OthelloBoard::Reset(){
 
 void OthelloBoard::Print(){
     
+    std::cout << "  ";
+    for(int j = 0; j < width; j++){
+        std::cout << j << " ";
+    }
+    
+    std::cout << std::endl;
     for(int i = 0; i < height; i++){
+        std::cout << i << " ";
         for(int j = 0; j < width; j++){
-            switch (boardStatus[i][j]) {
+            switch (boardStatus[j][i]) {
                 case kEmpty:
-                    std::cout << "E ";
+                    std::cout << ". ";
                     break;
                 case kBlack:
-                    std::cout << "B ";
+                    std::cout << "● ";
                     break;
                 case kWhite:
-                    std::cout << "W ";
+                    std::cout << "○ ";
                     break;
             }
         }
