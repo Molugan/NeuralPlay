@@ -65,6 +65,8 @@ int main(int argc, const char * argv[]) {
         if(currentPlayer.GetType() == kHuman){
             testBoard.Print();
             while(!currentPlayer.GetMove()){
+                std::cin.clear();
+                std::cin.ignore(512, '\n');
                 std::cout << "Invalid input, try again" << std::endl;
             }
         }

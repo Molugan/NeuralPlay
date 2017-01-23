@@ -82,12 +82,6 @@ public:
     
 private:
     
-    float GetEnergy(const int expectedLabel);
-    
-    void GetDerivateEnergy(const int expectedLabel);
-    
-    void BackPropagation(const float* input, const int expectedLabel);
-    
     void UpdateNeuronsWithGradient(const int n_samples);
     
     void ResetGradient();
@@ -101,6 +95,14 @@ private:
     void InitCoeffWithRandomValue();
     
     float GetSoftMaxNormalier() const;
+    
+protected:
+    
+    virtual float GetEnergy(const int expectedLabel);
+    
+    virtual void GetDerivateEnergy(const int expectedLabel);
+    
+    void BackPropagation(const float* input, const int expectedLabel);
     
     
 };

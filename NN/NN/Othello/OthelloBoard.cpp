@@ -30,11 +30,11 @@ namespace  {
             case kUp:
             case kDiagp45:
             case kDiagp135:
-                return 1;
+                return -1;
             case kDown:
             case kDiagm135:
             case kDiagm45:
-                return -1;
+                return 1;
             default:
                 return 0;
         }
