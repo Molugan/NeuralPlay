@@ -48,10 +48,13 @@ public:
         }
     }
 
-    virtual void StopLearning(){ p_isLearning = false;}
+    virtual void StopLearning(){ p_isLearning = false; p_isSwitching = false;}
+    
+    void StopSwitching(){ p_isSwitching = false;}
 
     virtual void SlowLearning(){ p_network.o_learningRate /=2;}
 
     void Switch(){ p_isSwitching = !p_isSwitching;}
+    
 };
 #endif /* NNPlayer_h */

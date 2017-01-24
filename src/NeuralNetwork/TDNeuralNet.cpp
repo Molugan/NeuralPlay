@@ -28,7 +28,7 @@ TDNeuralNet::TDNeuralNet(const int sizeHidden) : NeuralNet(){
     ResetGradient();
     
     p_lastOutput = 0.f;
-    p_lambda     = 0.5f;
+    p_lambda     = 0.3f;
 }
 
 void TDNeuralNet::UpdateNeuronsWithGradient(float newOutput){
@@ -38,7 +38,7 @@ void TDNeuralNet::UpdateNeuronsWithGradient(float newOutput){
     const float diffOutput = o_learningRate * (newOutput - p_lastOutput);
         
     for(int i_neuron = 0; i_neuron < tot_neurons; i_neuron++){
-        const int nCoeffs = (int) p_neuronList[i_neuron].coeffs.size();
+        const int nCoeffs = (int) p_neuronList[i_neuron].coeffs.size() -1;
         for(int coeff = 0; coeff < nCoeffs; coeff++){
             p_neuronList[i_neuron].coeffs[coeff] += diffOutput * p_trainingNeurons[i_neuron].dcoeffs[coeff];
         }
