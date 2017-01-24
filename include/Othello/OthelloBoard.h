@@ -17,6 +17,7 @@
 typedef std::pair<int, int> CoordInt;
 CoordInt operator+(const CoordInt& a, const CoordInt &b);
 std::istream& operator>>(std::istream& stream, CoordInt& output);
+std::ostream& operator<<(std::ostream& stream, const CoordInt& input);
 
 enum PlayerColor{
     kPlayerWhite = 0,

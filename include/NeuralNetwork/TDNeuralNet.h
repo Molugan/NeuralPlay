@@ -65,7 +65,7 @@ private:
     
     bool InitWithBoardStatus(const std::vector<CaseStatus>& boardStatus);
     
-    virtual void GetDerivateEnergy(const int expectedLabel);
+    virtual void GetDerivateEnergy(const int);
     
     void UpdateNeuronsWithGradient(const float newOutput);
     

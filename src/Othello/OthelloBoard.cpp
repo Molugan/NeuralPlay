@@ -53,6 +53,13 @@ std::istream& operator>>(std::istream& stream, CoordInt& output){
     
     return stream;
 }
+
+std::ostream& operator<<(std::ostream& stream, const CoordInt& input){
+
+    stream << input.first << " " << input.second;
+    return stream;
+}
+
 OthelloBoard::OthelloBoard(){
     Reset();
 }

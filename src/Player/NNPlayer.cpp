@@ -10,11 +10,11 @@
 
 NNPlayer::NNPlayer(const PlayerColor color, OthelloBoard* gamingBoard):
 Player(color, gamingBoard),
-p_network(60){
+p_network(64){
     m_type = kNN;
     
     p_boardStatus.resize(OthelloBoard::width * OthelloBoard::height);
-    p_network.o_learningRate = 10.f;
+    p_network.o_learningRate = 0.001f;
 }
 
 bool NNPlayer::GetMove(){
@@ -64,6 +64,8 @@ bool NNPlayer::GetMove(){
     // Train the neural network using the chosen move
     p_boardStatus[outCoordinates.first * OthelloBoard::width + outCoordinates.second] = newStatus;
     p_network.TrainOnMove(p_boardStatus, kNULL);
+
+    //std::cout << outValue << " -> " << outCoordinates << " ; ";
     
     return m_board->PlayAt(m_color, outCoordinates);
 }

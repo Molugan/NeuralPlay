@@ -26,7 +26,7 @@ TDNeuralNet::TDNeuralNet(const int sizeHidden) : NeuralNet(){
     InitCoeffWithRandomValue();
     
     p_lastOutput = 0.f;
-    p_lambda     = 0.5f;
+    p_lambda     = 0.9f;
 }
 
 /*std::vector<float> TDNeuralNet::MakeOutputVectorFromOutcome(GameOutcome outcome){
@@ -105,18 +105,13 @@ bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const GameO
     
     //Finally, add the new gradient computed at this turn
     BackPropagation(&boardStatus[0], 0);
-    
-    
+
     return true;
 }
 
-void TDNeuralNet::GetDerivateEnergy(const int expectedLabel){
+void TDNeuralNet::GetDerivateEnergy(const int /*expectedLabel*/){
     
-    for(int i_neuron = 0; i_neuron < kSizeOutput; i_neuron++){
-        for(int i_output = 0; i_output < kSizeOutput; i_output++){
-            p_trainingNeurons[p_offsetOutput + i_neuron].dE_val= 1;
-        }
-    }
+    p_trainingNeurons[p_offsetOutput + i_neuron].dE_val= 1;
 }
 
 /*void TDNeuralNet::InitTrainingNeuronsTD(){

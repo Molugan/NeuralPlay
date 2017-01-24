@@ -43,63 +43,66 @@ int main(int argc, const char * argv[]) {
     Player* playerList[] = {whitePlayer, blackPlayer};
     
     const bool isHumanPlaying = playerList[0]->GetType() == kHuman || playerList[1]->GetType()==kHuman;
-    const int n_games = 1000;
+    const int n_games = 100;
     
     for(int game = 0; game < n_games; game++){
     
-    int indexPlayer = 0;
-    
-    for(;;){
-        Player& currentPlayer = *playerList[indexPlayer];
-        PlayerColor currentColor = currentPlayer.GetColor();
-        
-        if(isHumanPlaying)
+        int indexPlayer = 0;
+
+        for(;;){
+
+            Player& currentPlayer = *playerList[indexPlayer];
+            PlayerColor currentColor = currentPlayer.GetColor();
+
+            if(isHumanPlaying)
             std::cout << PlayerColorToStr(currentColor) << " player's turn" << std::endl;
-        
-        std::vector<CoordInt> availablePos = testBoard.GetAvailablePos(currentColor);
-        
-        if(availablePos.empty()){
-            availablePos = testBoard.GetAvailablePos(playerList[1 - indexPlayer]->GetColor());
+
+            std::vector<CoordInt> availablePos = testBoard.GetAvailablePos(currentColor);
+
             if(availablePos.empty()){
-                std::cout << "End of the game" << std::endl;
-                break;
+                availablePos = testBoard.GetAvailablePos(playerList[1 - indexPlayer]->GetColor());
+                if(availablePos.empty()){
+                    std::cout << "End of the game" << std::endl;
+                    break;
+                }
+                else{
+                    indexPlayer = 1 - indexPlayer;
+                    continue;
+                }
             }
-            else{
-                indexPlayer = 1 - indexPlayer;
-                continue;
+
+            if(currentPlayer.GetType() == kHuman){
+                testBoard.Print();
+                    while(!currentPlayer.GetMove()){
+                    std::cin.clear();
+                    std::cin.ignore(512, '\n');
+                    std::cout << "Invalid input, try again" << std::endl;
+                }
             }
-        }
-        
-        if(currentPlayer.GetType() == kHuman){
-            testBoard.Print();
-            while(!currentPlayer.GetMove()){
-                std::cin.clear();
-                std::cin.ignore(512, '\n');
-                std::cout << "Invalid input, try again" << std::endl;
+
+            else if(!currentPlayer.GetMove()){
+                std::cout << "AI ERROR, game stopped" << std::endl;
+                return AI_ERROR;
             }
+
+            indexPlayer = 1 - indexPlayer;
         }
-        
-        else if(!currentPlayer.GetMove()){
-            std::cout << "AI ERROR, game stopped" << std::endl;
-            return AI_ERROR;
+
+        for(int n_player = 0; n_player < 2; n_player++){
+            playerList[n_player]->EndGameMove();
+            playerList[n_player]->NewGame();
         }
-        
-        indexPlayer = 1 - indexPlayer;
-    }
-    
-    for(int n_player = 0; n_player < 2; n_player++){
-        playerList[n_player]->EndGameMove();
-        playerList[n_player]->NewGame();
-    }
-    
+
         if(isHumanPlaying){
-             testBoard.Print();
-             break;
+            testBoard.Print();
+            break;
         }
         else{
+            //testBoard.Print();
             std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
+            testBoard.Reset();
         }
-        
+
     }
     return 0;
 }
