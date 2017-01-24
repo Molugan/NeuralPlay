@@ -24,6 +24,13 @@ enum PlayerColor{
     kPlayerBlack
 };
 
+inline PlayerColor GetOppositeColor(const PlayerColor input){
+    if(input == kPlayerBlack)
+        return kPlayerWhite;
+
+    return kPlayerBlack;
+}
+
 enum Direction{
     kUp = 0,
     kDown,

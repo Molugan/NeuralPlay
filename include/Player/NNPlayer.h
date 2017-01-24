@@ -24,6 +24,11 @@ private:
     void UpdateBoardStatus();
     
     bool        p_isLearning;
+
+    bool p_isSwitching;
+
+    void SwitchBoard();
+
 public:
     
     NNPlayer(const PlayerColor color, OthelloBoard* gamingBoard);
@@ -34,8 +39,19 @@ public:
     
     virtual void NewGame();
 
+    virtual PlayerColor GetColor() const{
+        if(p_isSwitching){
+            return GetOppositeColor(m_color);
+        }
+        else{
+            return m_color;
+        }
+    }
+
     virtual void StopLearning(){ p_isLearning = false;}
 
     virtual void SlowLearning(){ p_network.o_learningRate /=2;}
+
+    void Switch(){ p_isSwitching = !p_isSwitching;}
 };
 #endif /* NNPlayer_h */

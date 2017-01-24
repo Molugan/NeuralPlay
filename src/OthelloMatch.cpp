@@ -42,29 +42,36 @@ int main(int argc, const char * argv[]) {
     
     Player* playerList[] = {whitePlayer, blackPlayer};
     
-    Player* newWhitePlayer = new AIPlayer(kPlayerWhite, &testBoard);
+   // Player* newWhitePlayer = new AIPlayer(kPlayerWhite, &testBoard);
+
+    NNPlayer superPlayer = NNPlayer(kPlayerBlack, &testBoard);
+
+    bool isSuperPlayerTraining = true;
 
     const bool isHumanPlaying = playerList[0]->GetType() == kHuman || playerList[1]->GetType()==kHuman;
-    const int n_games = 200;
-    const int shiftPlayer = n_games *0.9f;
+    const int n_games = 10000;
+    const int shiftPlayer = n_games - 10;
 
     int samplingVictory = 0;
-    const int samplingRate = 500;
+    const int samplingRate = 100;
 
     float limitSlow = 0.7f;
+
+    //TODO : train the neural network against himself (and not another neural net) using a board reversion
     
     for(int game = 0; game < n_games; game++){
     
         int indexPlayer = 0;
-        /*if(game == shiftPlayer){
-            std::cout << "Shifting player" << std::endl;
-            playerList[0] = newWhitePlayer;
-            //playerList[1]->StopLearning();
-        }*/
+        if(game == shiftPlayer){
+            std::cout << "Shifting player" << std::endl;;
+            playerList[1] = &superPlayer;
+            isSuperPlayerTraining = false;
+            //superPlayer.StopLearning();
+        }
 
         for(;;){
 
-            Player& currentPlayer = *playerList[indexPlayer];
+            Player& currentPlayer = isSuperPlayerTraining ? superPlayer : *playerList[indexPlayer];
             PlayerColor currentColor = currentPlayer.GetColor();
 
             if(isHumanPlaying)
@@ -79,6 +86,9 @@ int main(int argc, const char * argv[]) {
                     break;
                 }
                 else{
+                    if(isSuperPlayerTraining)
+                        superPlayer.Switch();
+
                     indexPlayer = 1 - indexPlayer;
                     continue;
                 }
@@ -99,15 +109,17 @@ int main(int argc, const char * argv[]) {
             }
 
             indexPlayer = 1 - indexPlayer;
+            if(isSuperPlayerTraining)
+                superPlayer.Switch();
         }
 
         if(game > 0 && game % samplingRate == 0){
             std::cout << static_cast<float>(samplingVictory) / static_cast<float>(samplingRate) << std::endl;
-            if(static_cast<float>(samplingVictory) / static_cast<float>(samplingRate) > limitSlow){
+            /*if(static_cast<float>(samplingVictory) / static_cast<float>(samplingRate) > limitSlow){
                 std::cout << "slow down" <<std::endl;
                 playerList[1]->SlowLearning();
                 limitSlow*=1.05;
-            }
+            }*/
             samplingVictory = 0;
         }
         else{
@@ -119,6 +131,13 @@ int main(int argc, const char * argv[]) {
         for(int n_player = 0; n_player < 2; n_player++){
             playerList[n_player]->EndGameMove();
             playerList[n_player]->NewGame();
+
+            if(isSuperPlayerTraining){
+                superPlayer.EndGameMove();
+                superPlayer.Switch();
+                superPlayer.EndGameMove();
+                superPlayer.NewGame();
+            }
         }
 
         if(isHumanPlaying){

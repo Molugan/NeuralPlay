@@ -10,22 +10,29 @@
 
 NNPlayer::NNPlayer(const PlayerColor color, OthelloBoard* gamingBoard):
 Player(color, gamingBoard),
-p_network(30){
+p_network(60){
     m_type = kNN;
     
     p_boardStatus.resize(OthelloBoard::width * OthelloBoard::height);
     p_network.o_learningRate = 0.005f;
 
     p_isLearning = true;
+
+    p_isSwitching = false;
 }
 
 bool NNPlayer::GetMove(){
 
-    std::vector<CoordInt> availablePos = m_board->GetAvailablePos(m_color);
+    std::vector<CoordInt> availablePos = m_board->GetAvailablePos(GetColor());
     
     int newStatus = m_color == kPlayerBlack ? -1 : 1;
     
     UpdateBoardStatus();
+
+    if(p_isSwitching){
+        newStatus = -newStatus;
+        SwitchBoard();
+    }
     
     if(availablePos.empty())
         return false;
@@ -71,13 +78,18 @@ bool NNPlayer::GetMove(){
 
     std::cout << outValue <<" ; ";
     
-    return m_board->PlayAt(m_color, outCoordinates);
+    return m_board->PlayAt(GetColor(), outCoordinates);
 }
 
 bool NNPlayer::EndGameMove(){
     
-    int score = m_color == kPlayerWhite ? m_board->GetWhiteScore() : m_board->GetBlackScore();
+    PlayerColor color = GetColor();
+    int score = color == kPlayerBlack ? m_board->GetBlackScore() : m_board->GetWhiteScore();
     UpdateBoardStatus();
+
+    if(p_isSwitching)
+        SwitchBoard();
+
     return p_network.TrainOnMove(p_boardStatus, score);
 }
 
@@ -94,4 +106,10 @@ void NNPlayer::UpdateBoardStatus(){
 
 void NNPlayer::NewGame(){
     p_network.Reset();
+}
+
+void NNPlayer::SwitchBoard(){
+    for(int i = 0; i < p_boardStatus.size(); i++){
+        p_boardStatus[i] *= -1;
+    }
 }

@@ -24,9 +24,11 @@ TDNeuralNet::TDNeuralNet(const int sizeHidden) : NeuralNet(){
     
     InitTrainingNeurons();
     InitCoeffWithRandomValue();
+
+    ResetGradient();
     
     p_lastOutput = 0.f;
-    p_lambda     = 0.3f;
+    p_lambda     = 0.5f;
 }
 
 void TDNeuralNet::UpdateNeuronsWithGradient(float newOutput){
@@ -58,6 +60,9 @@ bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const int e
     float newOutput = GetValueFromOutcome(endGameScore);
     //Update the current weights using the previous gradients calculated
     UpdateNeuronsWithGradient(newOutput);
+
+    // Apply the lambda multiplier
+    ApplyLambdaMultiplier();
     
     //If this isn't the last turn (expectedOutput != kNULL), update the gradients values
     
@@ -67,8 +72,6 @@ bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const int e
     //Copy the output
     p_lastOutput = newOutput;
     
-    // Apply the lambda multiplier
-    ApplyLambdaMultiplier();
     
     //Finally, add the new gradient computed at this turn
     BackPropagation(&boardStatus[0], 0);

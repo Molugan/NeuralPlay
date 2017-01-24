@@ -31,7 +31,7 @@ public:
     
     virtual bool GetMove()= 0;
     
-    PlayerColor GetColor() const{ return m_color;}
+    virtual PlayerColor GetColor() const{ return m_color;}
     
     PlayerType GetType() const {return m_type;}
     
