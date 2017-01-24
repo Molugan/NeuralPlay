@@ -6,7 +6,7 @@
 //  Copyright © 2017 Morgane Riviere. All rights reserved.
 //
 
-#include "AIPlayer.h"
+#include <Player/AIPlayer.h>
 
 AIPlayer::AIPlayer(const PlayerColor color, OthelloBoard* gamingBoard):
 Player(color, gamingBoard){

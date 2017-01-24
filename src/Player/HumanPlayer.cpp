@@ -6,7 +6,7 @@
 //  Copyright © 2017 Morgane Riviere. All rights reserved.
 //
 
-#include "HumanPlayer.h"
+#include <Player/HumanPlayer.h>
 #include <iostream>
 
 HumanPlayer::HumanPlayer(const PlayerColor color, OthelloBoard* gamingBoard)

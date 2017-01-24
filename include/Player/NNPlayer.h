@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include "Player.h"
-#include "TDNeuralNet.h"
+#include <NeuralNetwork/TDNeuralNet.h>
 
 class NNPlayer : public Player{
     

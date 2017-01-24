@@ -6,7 +6,7 @@
 //  Copyright © 2017 Morgane Riviere. All rights reserved.
 //
 
-#include "TDNeuralNet.h"
+#include <NeuralNetwork/TDNeuralNet.h>
 
 namespace {
     inline float Sigmoid(float x){

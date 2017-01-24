@@ -6,7 +6,7 @@
 //  Copyright © 2017 Morgane Riviere. All rights reserved.
 //
 
-#include "IrisDataReader.h"
+#include <DataReader/IrisDataReader.h>
 #include <fstream>
 #include <vector> 
 #include <iostream>

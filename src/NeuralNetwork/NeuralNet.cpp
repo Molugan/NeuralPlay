@@ -6,7 +6,7 @@
 //  Copyright © 2017 Morgane Riviere. All rights reserved.
 //
 
-#include "NeuralNet.h"
+#include <NeuralNetwork/NeuralNet.h>
 #include <iostream>
 #include <fstream>
 #include <math.h>

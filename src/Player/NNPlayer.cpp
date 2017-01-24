@@ -6,7 +6,7 @@
 //  Copyright © 2017 Morgane Riviere. All rights reserved.
 //
 
-#include "NNPlayer.h"
+#include <Player/NNPlayer.h>
 
 NNPlayer::NNPlayer(const PlayerColor color, OthelloBoard* gamingBoard):
 Player(color, gamingBoard),
@@ -29,6 +29,9 @@ bool NNPlayer::GetMove(){
         return false;
     
     CoordInt outCoordinates = availablePos[0];
+    if(p_boardStatus[outCoordinates.first * OthelloBoard::width + outCoordinates.second] != 0){
+        return false;
+    }
     p_boardStatus[outCoordinates.first * OthelloBoard::width + outCoordinates.second] = newStatus;
     
     //m_board->Print();
@@ -42,6 +45,11 @@ bool NNPlayer::GetMove(){
     
     for(int j = 1; j < n_pos; j++){
         CoordInt currCoordinates = availablePos[j];
+
+        if(p_boardStatus[currCoordinates.first * OthelloBoard::width + currCoordinates.second] != 0){
+            return false;
+        }
+
         p_boardStatus[currCoordinates.first * OthelloBoard::width + currCoordinates.second] = newStatus;
         p_network.Evualuate(p_boardStatus);
         

@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include <math.h>
-#include "NeuralNet.h"
+#include <NeuralNetwork/NeuralNet.h>
 
 bool UTValueInit(){
     NeuralNet network;
@@ -16,7 +16,8 @@ bool UTValueInit(){
     
     float tolerance = 0.001f;
     
-    std::vector<float> input1 = { 1.f, 0.f};
+    float inputList[] = { 1.f, 0.f};
+    std::vector<float> input1(inputList, inputList + 2);
     float expectedOutput = 0.9472f;
     
     if(!network.Evualuate(input1)){

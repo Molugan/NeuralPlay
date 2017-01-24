@@ -10,8 +10,8 @@
 #define TDNeuralNet_h
 
 #include <stdio.h>
-#include "NeuralNet.h"
-#include "OthelloBoard.h"
+#include <NeuralNetwork/NeuralNet.h>
+#include <Othello/OthelloBoard.h>
 #include <vector>
 
 class TDNeuralNet : public NeuralNet{

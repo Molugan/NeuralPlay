@@ -8,8 +8,8 @@
 
 #include <iostream>
 
-#include "NeuralNet/NeuralNet.h"
-#include "DataReader/IrisDataReader.h"
+#include <NeuralNetwork/NeuralNet.h>
+#include <DataReader/IrisDataReader.h>
 
 #define LOADING_ERROR 1
 #define TRAINING_ERROR 2

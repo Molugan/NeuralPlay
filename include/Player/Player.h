@@ -9,7 +9,7 @@
 #ifndef Player_h
 #define Player_h
 
-#include "OthelloBoard.h"
+#include <Othello/OthelloBoard.h>
 #include <stdio.h>
 
 enum PlayerType{

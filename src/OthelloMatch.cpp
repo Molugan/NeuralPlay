@@ -7,10 +7,10 @@
 //
 
 #include <iostream>
-#include "OthelloBoard.h"
-#include "HumanPlayer.h"
-#include "AIPlayer.h"
-#include "NNPlayer.h"
+#include <Othello/OthelloBoard.h>
+#include <Player/HumanPlayer.h>
+#include <Player/AIPlayer.h>
+#include <Player/NNPlayer.h>
 
 #define AI_ERROR 1
 

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Morgane Riviere. All rights reserved.
 //
 
-#include "OthelloBoard.h"
+#include <Othello/OthelloBoard.h>
 #include <iostream>
 
 namespace  {
