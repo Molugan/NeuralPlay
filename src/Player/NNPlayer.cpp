@@ -10,7 +10,7 @@
 
 NNPlayer::NNPlayer(const PlayerColor color, OthelloBoard* gamingBoard):
 Player(color, gamingBoard),
-p_network(10){
+p_network(30){
     m_type = kNN;
     
     p_boardStatus.resize(OthelloBoard::width * OthelloBoard::height);
@@ -76,7 +76,7 @@ bool NNPlayer::GetMove(){
     if(p_isLearning)
         p_network.TrainOnMove(p_boardStatus, -1);
 
-    //std::cout << outValue <<" ; ";
+    std::cout << outValue <<" ; ";
     
     return m_board->PlayAt(GetColor(), outCoordinates);
 }

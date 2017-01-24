@@ -44,9 +44,11 @@ int main(int argc, const char * argv[]) {
     
    // Player* newWhitePlayer = new AIPlayer(kPlayerWhite, &testBoard);
 
-
+    NNPlayer superPlayer = NNPlayer(kPlayerBlack, &testBoard);
+    bool isSuperPlayerTraining = false;
+    
     const bool isHumanPlaying = playerList[0]->GetType() == kHuman || playerList[1]->GetType()==kHuman;
-    const int n_games = 100000;//100000;
+    const int n_games = 1000;//100000;
     const int shiftPlayer = n_games - 10;
 
     int samplingVictory = 0;
@@ -62,7 +64,7 @@ int main(int argc, const char * argv[]) {
 
         for(;;){
 
-            Player& currentPlayer =  *playerList[indexPlayer];
+            Player& currentPlayer =  isSuperPlayerTraining ? superPlayer : *playerList[indexPlayer];
             PlayerColor currentColor = currentPlayer.GetColor();
 
             if(isHumanPlaying)
@@ -77,7 +79,8 @@ int main(int argc, const char * argv[]) {
                     break;
                 }
                 else{
-
+                    if(isSuperPlayerTraining)
+                        superPlayer.Switch();
                     indexPlayer = 1 - indexPlayer;
                     continue;
                 }
@@ -98,6 +101,7 @@ int main(int argc, const char * argv[]) {
             }
 
             indexPlayer = 1 - indexPlayer;
+            superPlayer.Switch();
         }
 
         if(game > 0 && game % samplingRate == 0){
@@ -121,9 +125,10 @@ int main(int argc, const char * argv[]) {
         }
         else /*if(!isSuperPlayerTraining)*/{
             //testBoard.Print();
-            //std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
-            testBoard.Reset();
+            std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
         }
+        
+        testBoard.Reset();
 
     }
     return 0;
