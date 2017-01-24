@@ -37,25 +37,18 @@ public:
         }
     }
     
-    inline float GetValueFromOutcome(const GameOutcome& outcome) const{
-        switch (outcome) {
-            case kVictory:
-                return 1;
-            case kDraw:
-                return 0.5;
-            case kDefeat:
-                return 0.f;
-            default:
-                return p_neuronList[p_offsetOutput].output;
-        }
+    inline float GetValueFromOutcome(const int outcome) const{
+        if(outcome >= 0)
+            return outcome;
+        else
+            return p_neuronList[p_offsetOutput].output;
     }
     
     float GetOutput(){
         return p_neuronList[p_offsetOutput].output;
     }
     
-    bool TrainOnMove(const std::vector<float>& boardStatus, const GameOutcome expectedOutput);
-    
+    bool TrainOnMove(const std::vector<float>& boardStatus, const int endGameScore);
     
 private:
     
@@ -71,9 +64,9 @@ private:
     
     void ApplyLambdaMultiplier();
     
-    virtual void ApplyActivationDiffAtNeuron(int idx_neuron);
+    /*virtual void ApplyActivationDiffAtNeuron(int idx_neuron);
     
-    virtual void ApplyActivationFunctionAtNeuron(int idx_neuron);
+    virtual void ApplyActivationFunctionAtNeuron(int idx_neuron);*/
     
     
 };

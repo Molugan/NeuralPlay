@@ -23,6 +23,7 @@ private:
     
     void UpdateBoardStatus();
     
+    bool        p_isLearning;
 public:
     
     NNPlayer(const PlayerColor color, OthelloBoard* gamingBoard);
@@ -32,5 +33,9 @@ public:
     virtual bool EndGameMove();
     
     virtual void NewGame();
+
+    virtual void StopLearning(){ p_isLearning = false;}
+
+    virtual void SlowLearning(){ p_network.o_learningRate /=2;}
 };
 #endif /* NNPlayer_h */

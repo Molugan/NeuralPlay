@@ -253,7 +253,6 @@ void NeuralNet::BackPropagation(const float* input, int expectedOutput){
             
             const int indexNeuron = i_neuron + currentLayerOffset;
             ApplyActivationDiffAtNeuron(indexNeuron);
-
             
             //if dE/dsout hasn't been initialized yet (ie, if we are not considering the output layer)
             if(layer < p_nLayers - 1){

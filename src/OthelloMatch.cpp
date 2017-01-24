@@ -42,15 +42,25 @@ int main(int argc, const char * argv[]) {
     
     Player* playerList[] = {whitePlayer, blackPlayer};
     
+    Player* newWhitePlayer = new AIPlayer(kPlayerWhite, &testBoard);
+
     const bool isHumanPlaying = playerList[0]->GetType() == kHuman || playerList[1]->GetType()==kHuman;
-    const int n_games = 1000;
+    const int n_games = 200;
+    const int shiftPlayer = n_games *0.9f;
 
     int samplingVictory = 0;
-    const int samplingRate = 50;
+    const int samplingRate = 500;
+
+    float limitSlow = 0.7f;
     
     for(int game = 0; game < n_games; game++){
     
         int indexPlayer = 0;
+        /*if(game == shiftPlayer){
+            std::cout << "Shifting player" << std::endl;
+            playerList[0] = newWhitePlayer;
+            //playerList[1]->StopLearning();
+        }*/
 
         for(;;){
 
@@ -93,6 +103,11 @@ int main(int argc, const char * argv[]) {
 
         if(game > 0 && game % samplingRate == 0){
             std::cout << static_cast<float>(samplingVictory) / static_cast<float>(samplingRate) << std::endl;
+            if(static_cast<float>(samplingVictory) / static_cast<float>(samplingRate) > limitSlow){
+                std::cout << "slow down" <<std::endl;
+                playerList[1]->SlowLearning();
+                limitSlow*=1.05;
+            }
             samplingVictory = 0;
         }
         else{
@@ -112,7 +127,7 @@ int main(int argc, const char * argv[]) {
         }
         else{
             //testBoard.Print();
-            //std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
+            std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
             testBoard.Reset();
         }
 

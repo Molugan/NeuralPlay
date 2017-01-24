@@ -84,11 +84,11 @@ protected:
     
     virtual void GetDerivateEnergy(const int expectedLabel);
     
-    virtual void ResetGradient();
+    void ResetGradient();
     
-    virtual void ApplyActivationDiffAtNeuron(int idx_neuron);
+    void ApplyActivationDiffAtNeuron(int idx_neuron);
     
-    virtual void ApplyActivationFunctionAtNeuron(int idx_neuron);
+    void ApplyActivationFunctionAtNeuron(int idx_neuron);
     
     void BackPropagation(const float* input, const int expectedLabel);
     

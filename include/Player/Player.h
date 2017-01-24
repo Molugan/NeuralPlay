@@ -60,6 +60,10 @@ public:
     }
     
     virtual void NewGame(){}
+
+    virtual void StopLearning(){};
+
+    virtual void SlowLearning(){};
     
 protected:
     
