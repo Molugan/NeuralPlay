@@ -17,7 +17,7 @@ class HumanPlayer : public Player{
 public:
     HumanPlayer(const PlayerColor color, OthelloBoard* gamingBoard);
     
-    virtual bool GetMove() const;
+    virtual bool GetMove();
 };
 
 #endif /* HumanPlayer_h */

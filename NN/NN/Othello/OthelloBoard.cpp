@@ -86,7 +86,7 @@ void OthelloBoard::Print(){
     for(int i = 0; i < height; i++){
         std::cout << i << " ";
         for(int j = 0; j < width; j++){
-            switch (boardStatus[j][i]) {
+            switch (boardStatus[i][j]) {
                 case kEmpty:
                     std::cout << ". ";
                     break;

@@ -36,13 +36,20 @@ enum Direction{
     
 };
 
+enum CaseStatus{
+    kWhite = 0,
+    kBlack,
+    kEmpty
+};
+
+enum GameOutcome{
+    kVictory = 0,
+    kDraw,
+    kDefeat,
+    kNULL
+};
+
 class OthelloBoard{
-    
-    enum CaseStatus{
-        kWhite = 0,
-        kBlack,
-        kEmpty
-    };
     
 private:
     
@@ -55,7 +62,7 @@ private:
     }
     
     inline void SetCaseAtCoordinates(const CoordInt& coord, const CaseStatus& value){
-        boardStatus[coord.second][coord.first] = value;
+        boardStatus[coord.first][coord.second] = value;
     }
     
     int p_nWhitePawns;
@@ -81,7 +88,7 @@ public:
     int GetBlackScore() const{ return p_nBlackPawns;}
     
     CaseStatus GetCaseAtCoordinates(const CoordInt& coordinates) const{
-        return boardStatus[coordinates.second][coordinates.first];
+        return boardStatus[coordinates.first][coordinates.second];
     }
     
     bool CanPlay(PlayerColor currentPlayer, CoordInt targetCoordinates) const ;

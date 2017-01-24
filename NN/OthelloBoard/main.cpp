@@ -10,6 +10,7 @@
 #include "OthelloBoard.h"
 #include "HumanPlayer.h"
 #include "AIPlayer.h"
+#include "NNPlayer.h"
 
 #define AI_ERROR 1
 
@@ -36,10 +37,15 @@ int main(int argc, const char * argv[]) {
     
     testBoard.Reset();
     
-    Player* whitePlayer = new HumanPlayer(kPlayerWhite, &testBoard);
-    Player* blackPlayer = new AIPlayer(kPlayerBlack, &testBoard);
+    Player* whitePlayer = new AIPlayer(kPlayerWhite, &testBoard);
+    Player* blackPlayer = new NNPlayer(kPlayerBlack, &testBoard);
     
     Player* playerList[] = {whitePlayer, blackPlayer};
+    
+    const bool isHumanPlaying = playerList[0]->GetType() == kHuman || playerList[1]->GetType()==kHuman;
+    const int n_games = 1000;
+    
+    for(int game = 0; game < n_games; game++){
     
     int indexPlayer = 0;
     
@@ -47,7 +53,9 @@ int main(int argc, const char * argv[]) {
         Player& currentPlayer = *playerList[indexPlayer];
         PlayerColor currentColor = currentPlayer.GetColor();
         
-        std::cout << PlayerColorToStr(currentColor) << " player's turn" << std::endl;
+        if(isHumanPlaying)
+            std::cout << PlayerColorToStr(currentColor) << " player's turn" << std::endl;
+        
         std::vector<CoordInt> availablePos = testBoard.GetAvailablePos(currentColor);
         
         if(availablePos.empty()){
@@ -79,6 +87,19 @@ int main(int argc, const char * argv[]) {
         indexPlayer = 1 - indexPlayer;
     }
     
-    testBoard.Print();
+    for(int n_player = 0; n_player < 2; n_player++){
+        playerList[n_player]->EndGameMove();
+        playerList[n_player]->NewGame();
+    }
+    
+        if(isHumanPlaying){
+             testBoard.Print();
+             break;
+        }
+        else{
+            std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
+        }
+        
+    }
     return 0;
 }

@@ -32,6 +32,6 @@ public:
     
     AIPlayer(const PlayerColor color, OthelloBoard* gamingBoard);
     
-    virtual bool GetMove() const;
+    virtual bool GetMove();
 };
 #endif /* AIPlayer_h */

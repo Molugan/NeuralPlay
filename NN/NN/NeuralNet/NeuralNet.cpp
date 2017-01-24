@@ -57,11 +57,17 @@ void NeuralNet::Init(const unsigned int sizeInput, const unsigned int sizeHidden
 }
 
 void NeuralNet::ApplyActivationFunctionAtNeuron(int i_neuron){
-    p_neuronList[i_neuron].output = Sigmoid(p_neuronList[i_neuron].currentVal);
+    if(i_neuron < p_offsetOutput)
+        p_neuronList[i_neuron].output = Sigmoid(p_neuronList[i_neuron].currentVal);
+    else
+        p_neuronList[i_neuron].output = p_neuronList[i_neuron].currentVal;
 }
 
 void NeuralNet::ApplyActivationDiffAtNeuron(int i_neuron){
-    p_trainingNeurons[i_neuron].df_val = dSigmoid(p_neuronList[i_neuron].currentVal);
+    if(i_neuron < p_offsetOutput)
+        p_trainingNeurons[i_neuron].df_val = dSigmoid(p_neuronList[i_neuron].currentVal);
+    else
+        p_trainingNeurons[i_neuron].df_val = 1;
 }
 
 bool NeuralNet::Evualuate(const std::vector<float> &input){
@@ -98,12 +104,7 @@ bool NeuralNet::Evualuate(const std::vector<float> &input){
                 p_neuronList[indexNeuron].currentVal += p_neuronList[indexNeuron].coeffs[nVal] * p_neuronList[lastOffset + nVal].output;
             }
             
-            if(layer < p_nLayers -1){
-                ApplyActivationFunctionAtNeuron(indexNeuron);
-            }
-            else{
-                p_neuronList[indexNeuron].output = p_neuronList[indexNeuron].currentVal;
-            }
+            ApplyActivationFunctionAtNeuron(indexNeuron);
         }
         currentLayerOffset += currentLayerSize;
         lastOffset+= currentCoeffSize;
@@ -137,6 +138,45 @@ bool NeuralNet::Save(const std::string outPath) const {
             }
             
             file << std::endl;
+        }
+        offsetNeuron+=currentSize;
+        lastSize = currentSize;
+    }
+    
+    return true;
+}
+
+bool NeuralNet::Load(const std::string inPath){
+    
+    std::ifstream file;
+    file.open(inPath.c_str());
+    
+    if(!file){
+        std::cout << "NeuralNet::Load::ERROR::couldn't open " << inPath << std::endl;
+        return false;
+    }
+    
+    file >> p_sizeInput;
+    file >> p_nLayers;
+    
+    p_sizeLayer.resize(p_nLayers);
+    
+    p_neuronList.clear();
+    p_trainingNeurons.clear();
+    
+    int lastSize = p_sizeInput;
+    int offsetNeuron = 0;
+    
+    for(int layer = 0; layer < p_nLayers; layer++){
+        int currentSize;
+        file >> currentSize;
+        p_sizeLayer[layer] = currentSize;
+        for(int i = 0; i < currentSize; i++){
+            Neuron newNeuron;
+            newNeuron.coeffs.resize(lastSize + 1);
+            for(int val = 0; val < lastSize + 1; val++){
+                file >> p_neuronList[offsetNeuron + i].coeffs[val];
+            }
         }
         offsetNeuron+=currentSize;
         lastSize = currentSize;
@@ -212,11 +252,8 @@ void NeuralNet::BackPropagation(const float* input, int expectedOutput){
         for(int i_neuron = 0; i_neuron < currentLayerSize; i_neuron++){
             
             const int indexNeuron = i_neuron + currentLayerOffset;
-            if(layer == p_nLayers - 1)
-                ApplyActivationDiffAtNeuron(indexNeuron);
-            else{
-                p_trainingNeurons[indexNeuron].df_val = 1;
-            }
+            ApplyActivationDiffAtNeuron(indexNeuron);
+
             
             //if dE/dsout hasn't been initialized yet (ie, if we are not considering the output layer)
             if(layer < p_nLayers - 1){

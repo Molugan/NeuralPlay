@@ -14,7 +14,7 @@ HumanPlayer::HumanPlayer(const PlayerColor color, OthelloBoard* gamingBoard)
     m_type = kHuman;
 }
 
-bool HumanPlayer::GetMove() const{
+bool HumanPlayer::GetMove(){
     
     CoordInt coordsToPlay;
     std::cin >> coordsToPlay;

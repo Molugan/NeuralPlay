@@ -13,7 +13,7 @@ Player(color, gamingBoard){
     m_type = kAI;
 }
 
-bool AIPlayer::GetMove() const{
+bool AIPlayer::GetMove(){
     
     std::vector<CoordInt> availablePos = m_board->GetAvailablePos(m_color);
     

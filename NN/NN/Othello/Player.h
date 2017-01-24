@@ -14,7 +14,8 @@
 
 enum PlayerType{
     kHuman,
-    kAI
+    kAI,
+    kNN
 };
 
 class Player{
@@ -28,11 +29,37 @@ public:
         m_board = gamingBoard;
     }
     
-    virtual bool GetMove() const = 0;
+    virtual bool GetMove()= 0;
     
     PlayerColor GetColor() const{ return m_color;}
     
     PlayerType GetType() const {return m_type;}
+    
+    virtual bool EndGameMove(){ return true; }
+    
+    inline GameOutcome GetOutcome(){
+        int whiteScore = m_board->GetWhiteScore();
+        int blackScore = m_board->GetBlackScore();
+        
+        if(m_color == kPlayerBlack){
+            if(whiteScore > blackScore)
+                return kDefeat;
+            if(whiteScore == blackScore)
+                return kDraw;
+            else
+                return kVictory;
+        }
+        else{
+            if(whiteScore > blackScore)
+                return kVictory;
+            if(whiteScore == blackScore)
+                return kDraw;
+            else
+                return kDefeat;
+        }
+    }
+    
+    virtual void NewGame(){}
     
 protected:
     

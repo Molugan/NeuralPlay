@@ -44,18 +44,7 @@ class NeuralNet{
     
     int                 p_sizeInput;
     
-    std::vector<Neuron> p_neuronList;
-    
-    std::vector<TrainingNeuron> p_trainingNeurons;
-    
-    std::vector<int>    p_sizeLayer;
-    
-    int                 p_nLayers;
-    
     int                 p_sizeOutput;
-    
-    int                 p_offsetOutput;
-    
     
     
 public:
@@ -72,6 +61,8 @@ public:
     
     bool Save(const std::string outPath) const;
     
+    bool Load(const std::string inPath);
+    
     void GetOutput(std::vector<float>& output) const;
     
     bool Train(const std::vector<std::vector<float> >& inputs, const std::vector<int>& labels);
@@ -84,15 +75,6 @@ private:
     
     void UpdateNeuronsWithGradient(const int n_samples);
     
-    void ResetGradient();
-    
-    void ApplyActivationFunctionAtNeuron(int idx_neuron);
-    
-    void ApplyActivationDiffAtNeuron(int idx_neuron);
-    
-    void InitTrainingNeurons();
-    
-    void InitCoeffWithRandomValue();
     
     float GetSoftMaxNormalier() const;
     
@@ -102,8 +84,27 @@ protected:
     
     virtual void GetDerivateEnergy(const int expectedLabel);
     
+    virtual void ResetGradient();
+    
+    virtual void ApplyActivationDiffAtNeuron(int idx_neuron);
+    
+    virtual void ApplyActivationFunctionAtNeuron(int idx_neuron);
+    
     void BackPropagation(const float* input, const int expectedLabel);
     
+    void InitTrainingNeurons();
+    
+    void InitCoeffWithRandomValue();
+    
+    std::vector<TrainingNeuron> p_trainingNeurons;
+    
+    std::vector<Neuron>         p_neuronList;
+    
+    std::vector<int>            p_sizeLayer;
+    
+    int                         p_offsetOutput;
+    
+    int                 p_nLayers;
     
 };
 #endif /* NeuralNet_hpp */
