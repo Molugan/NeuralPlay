@@ -43,7 +43,10 @@ int main(int argc, const char * argv[]) {
     Player* playerList[] = {whitePlayer, blackPlayer};
     
     const bool isHumanPlaying = playerList[0]->GetType() == kHuman || playerList[1]->GetType()==kHuman;
-    const int n_games = 100;
+    const int n_games = 1000;
+
+    int samplingVictory = 0;
+    const int samplingRate = 50;
     
     for(int game = 0; game < n_games; game++){
     
@@ -62,7 +65,7 @@ int main(int argc, const char * argv[]) {
             if(availablePos.empty()){
                 availablePos = testBoard.GetAvailablePos(playerList[1 - indexPlayer]->GetColor());
                 if(availablePos.empty()){
-                    std::cout << "End of the game" << std::endl;
+                    //std::cout << "End of the game" << std::endl;
                     break;
                 }
                 else{
@@ -88,6 +91,16 @@ int main(int argc, const char * argv[]) {
             indexPlayer = 1 - indexPlayer;
         }
 
+        if(game > 0 && game % samplingRate == 0){
+            std::cout << static_cast<float>(samplingVictory) / static_cast<float>(samplingRate) << std::endl;
+            samplingVictory = 0;
+        }
+        else{
+            if(testBoard.GetBlackScore() > testBoard.GetWhiteScore()){
+                samplingVictory++;
+            }
+        }
+
         for(int n_player = 0; n_player < 2; n_player++){
             playerList[n_player]->EndGameMove();
             playerList[n_player]->NewGame();
@@ -99,7 +112,7 @@ int main(int argc, const char * argv[]) {
         }
         else{
             //testBoard.Print();
-            std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
+            //std::cout << "White : " << testBoard.GetWhiteScore() << " " << testBoard.GetBlackScore() << std::endl;
             testBoard.Reset();
         }
 

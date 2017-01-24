@@ -26,7 +26,7 @@ TDNeuralNet::TDNeuralNet(const int sizeHidden) : NeuralNet(){
     InitCoeffWithRandomValue();
     
     p_lastOutput = 0.f;
-    p_lambda     = 0.9f;
+    p_lambda     = 0.1f;
 }
 
 /*std::vector<float> TDNeuralNet::MakeOutputVectorFromOutcome(GameOutcome outcome){
@@ -79,11 +79,9 @@ void TDNeuralNet::Reset(){
 
 bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const GameOutcome expectedOutput){
     
-    if(expectedOutput != kNULL){
-        if(!Evualuate(boardStatus)){
-            std::cout << "TDNeuralNet::TrainOnMove::ERROR:: invalid input" << std::endl;
-            return false;
-        }
+    if(!Evualuate(boardStatus)){
+        std::cout << "TDNeuralNet::TrainOnMove::ERROR:: invalid input" << std::endl;
+        return false;
     }
     
     float newOutput = GetValueFromOutcome(expectedOutput);
@@ -111,7 +109,7 @@ bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const GameO
 
 void TDNeuralNet::GetDerivateEnergy(const int /*expectedLabel*/){
     
-    p_trainingNeurons[p_offsetOutput + i_neuron].dE_val= 1;
+    p_trainingNeurons[p_offsetOutput].dE_val= 1;
 }
 
 /*void TDNeuralNet::InitTrainingNeuronsTD(){
