@@ -18,6 +18,7 @@ enum PlayerType{
     kNN
 };
 
+//The basic class describing a player
 class Player{
     
 private:

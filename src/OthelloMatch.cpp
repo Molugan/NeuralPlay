@@ -37,24 +37,20 @@ int main(int argc, const char * argv[]) {
     
     testBoard.Reset();
     
-    Player* whitePlayer = new NNPlayer(kPlayerWhite, &testBoard);
+    Player* whitePlayer = new AIPlayer(kPlayerWhite, &testBoard);
     Player* blackPlayer = new NNPlayer(kPlayerBlack, &testBoard);
     
     Player* playerList[] = {whitePlayer, blackPlayer};
-    
-   // Player* newWhitePlayer = new AIPlayer(kPlayerWhite, &testBoard);
 
+    //There is a bug with the AI playing against itself
     NNPlayer superPlayer = NNPlayer(kPlayerBlack, &testBoard);
-    bool isSuperPlayerTraining = false;
+    bool isSuperPlayerTraining = true;
     
     const bool isHumanPlaying = playerList[0]->GetType() == kHuman || playerList[1]->GetType()==kHuman;
-    const int n_games = 1000;//100000;
-    const int shiftPlayer = n_games - 10;
+    const int n_games = 100000;
 
     int samplingVictory = 0;
     const int samplingRate = 100;
-
-    float limitSlow = 0.7f;
 
     //TODO : train the neural network against himself (and not another neural net) using a board reversion
     
@@ -114,9 +110,16 @@ int main(int argc, const char * argv[]) {
             }
         }
 
-        for(int n_player = 0; n_player < 2; n_player++){
-            playerList[n_player]->EndGameMove();
-            playerList[n_player]->NewGame();
+        if(isSuperPlayerTraining){
+            superPlayer.EndGameMove();
+            superPlayer.Switch();
+            superPlayer.EndGameMove();
+        }
+        else{
+            for(int n_player = 0; n_player < 2; n_player++){
+                playerList[n_player]->EndGameMove();
+                playerList[n_player]->NewGame();
+            }
         }
 
         if(isHumanPlaying){

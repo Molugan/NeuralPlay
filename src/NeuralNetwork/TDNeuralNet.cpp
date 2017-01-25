@@ -27,18 +27,17 @@ TDNeuralNet::TDNeuralNet(const int sizeHidden) : NeuralNet(){
 
     ResetGradient();
     
-    p_lastOutput = 0.f;
     p_lambda     = 0.3f;
 }
 
-void TDNeuralNet::UpdateNeuronsWithGradient(float newOutput){
+void TDNeuralNet::UpdateNeuronsWithGradient(float newOutput, float lastOutput){
     
     const int tot_neurons = (int) p_neuronList.size();
         
-    const float diffOutput = o_learningRate * (newOutput - p_lastOutput);
+    const float diffOutput = o_learningRate * (newOutput - lastOutput);
         
     for(int i_neuron = 0; i_neuron < tot_neurons; i_neuron++){
-        const int nCoeffs = (int) p_neuronList[i_neuron].coeffs.size() -1;
+        const int nCoeffs = (int) p_neuronList[i_neuron].coeffs.size();
         for(int coeff = 0; coeff < nCoeffs; coeff++){
             p_neuronList[i_neuron].coeffs[coeff] += diffOutput * p_trainingNeurons[i_neuron].dcoeffs[coeff];
         }
@@ -47,10 +46,9 @@ void TDNeuralNet::UpdateNeuronsWithGradient(float newOutput){
 
 void TDNeuralNet::Reset(){
     ResetGradient();
-    p_lastOutput = 0.f;
 }
 
-bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const int endGameScore){
+bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const int endGameScore, const float lastOutput){
     
     if(!Evualuate(boardStatus)){
         std::cout << "TDNeuralNet::TrainOnMove::ERROR:: invalid input" << std::endl;
@@ -59,7 +57,7 @@ bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const int e
     
     float newOutput = GetValueFromOutcome(endGameScore);
     //Update the current weights using the previous gradients calculated
-    UpdateNeuronsWithGradient(newOutput);
+    UpdateNeuronsWithGradient(newOutput, lastOutput);
 
     // Apply the lambda multiplier
     ApplyLambdaMultiplier();
@@ -68,9 +66,6 @@ bool TDNeuralNet::TrainOnMove(const std::vector<float>& boardStatus, const int e
     
     if(endGameScore >= 0)
         return true;
-    
-    //Copy the output
-    p_lastOutput = newOutput;
     
     
     //Finally, add the new gradient computed at this turn

@@ -28,6 +28,10 @@ private:
     bool p_isSwitching;
 
     void SwitchBoard();
+    
+    float p_lastOutputBlack;
+    
+    float p_lastOutputWhite;
 
 public:
     

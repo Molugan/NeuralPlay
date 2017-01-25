@@ -15,6 +15,8 @@
 #define TRAINING_ERROR 2
 #define EVALUATION_ERROR 3
 
+// For this classifier, I used a softmax copmbined with the cross entropy as the error function
+
 namespace  {
     void SoftMax(const std::vector<float>& resultNN, std::vector<float>& output){
         const int size = resultNN.size();
@@ -52,6 +54,7 @@ namespace  {
         return index;
     }
 }
+
 
 int main(int argc, const char * argv[]) {
     

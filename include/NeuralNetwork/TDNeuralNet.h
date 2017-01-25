@@ -48,19 +48,17 @@ public:
         return p_neuronList[p_offsetOutput].output;
     }
     
-    bool TrainOnMove(const std::vector<float>& boardStatus, const int endGameScore);
+    bool TrainOnMove(const std::vector<float>& boardStatus, const int endGameScore, const float lastOutput);
     
 private:
     
     float p_lambda;
     
-    float p_lastOutput;
-    
     bool InitWithBoardStatus(const std::vector<CaseStatus>& boardStatus);
     
     virtual void GetDerivateEnergy(const int);
     
-    void UpdateNeuronsWithGradient(const float newOutput);
+    void UpdateNeuronsWithGradient(const float newOutput, const float lastOutput);
     
     void ApplyLambdaMultiplier();
     
